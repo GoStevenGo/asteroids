@@ -1,6 +1,8 @@
 import pygame
 from constants import *
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     pygame.init()
@@ -10,10 +12,15 @@ def main():
 
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     
     Player.containers = (updatable, drawable) #adding all future Player instances to these groups
+    Asteroid.containers = (asteroids, updatable, drawable) #adding all future Asteroid instances to these groups
+    AsteroidField.containers = (updatable) #adding all future AsteroidField instances to this one group
 
-    spaceship = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) #instance of Player class
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) #instance of Player class
+    #asteroid = Asteroid()
+    asteroid_field = AsteroidField()
 
     while True: #Game loop
         for event in pygame.event.get(): #Makes the window's close button work
@@ -22,6 +29,11 @@ def main():
 
         for object in updatable:
             object.update(dt) #checks for user input (WASD) for player rotation and movement 
+
+        for object in asteroids:
+            if object.is_colliding(player): #checks for collision between player and all asteroids
+                print("Game Over!")
+                return
 
         screen.fill("black") #Creates game window/screen
 
