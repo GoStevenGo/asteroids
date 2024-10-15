@@ -32,10 +32,15 @@ def main():
         for object in updatable:
             object.update(dt) #checks for user input (WASD) for player rotation and movement 
 
-        for object in asteroids:
-            if object.is_colliding(player): #checks for collision between player and all asteroids
+        for asteroid in asteroids:
+            if asteroid.is_colliding(player): #checks for collision between player and all asteroids
                 print("Game Over!") #gets printed to console, not game screen since it's exiting the next line
                 return
+            
+            for shot in shots:
+                if asteroid.is_colliding(shot):
+                    shot.kill()
+                    asteroid.split()
 
         screen.fill("black") #Creates game window/screen
 
